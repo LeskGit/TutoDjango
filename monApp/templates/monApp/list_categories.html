@@ -1,0 +1,27 @@
+<html>
+    <head>
+        <title>Mon app DJANGO</title>
+    </head>
+    <body>
+        <h1>Hello mes categories !</h1>
+        <p>Mes categories sont :</p>
+        <ul>
+        {% for cat in ctds %}
+            <li>{{ cat.nomCat }} </li>
+        {% endfor %}
+        </ul>
+        <p>J'ai {{ ctds|length }} categories préférés.</p>
+        <p>
+            J'ai
+                {% if ctds|length < 5 %}
+                peu de 
+                {% elif ctds|length < 10 %}
+                quelques
+                {% else %}
+                beaucoup de 
+                {% endif %}
+                categories préférés
+        </p>
+
+    </body>
+</html>
