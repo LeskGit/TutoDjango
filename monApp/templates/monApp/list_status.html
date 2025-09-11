@@ -1,27 +1,30 @@
-<html>
-    <head>
-        <title>Mon app DJANGO</title>
-    </head>
-    <body>
-        <h1>Hello mes stats !</h1>
-        <p>Mes stats sont :</p>
-        <ul>
-        {% for stat in stats %}
-            <li>{{ stat.libelleStatus }} </li>
-        {% endfor %}
-        </ul>
-        <p>J'ai {{ stats|length }} status préférés.</p>
-        <p>
-            J'ai
-                {% if stats|length < 5 %}
-                peu de 
-                {% elif stats|length < 10 %}
-                quelques
-                {% else %}
-                beaucoup de 
-                {% endif %}
-                status préférés
-        </p>
 
-    </body>
-</html>
+{% extends 'monApp/base.html' %}
+{% block contenu %}
+<table class="table">
+    <thead>
+        <th>Id</th>
+        <th>Libelle status</th>
+    </thead>
+    <tbody>
+    {% for status in stats %}
+    <tr>
+        <td>{{ status.idStatus }} </td>
+        <td>{{ status.libelleStatus }} </td>
+    </tr>
+    {% endfor %}
+    </tbody>
+</table>
+    <p>J'ai {{ stats|length }} status préférés.</p>
+    <p>
+        J'ai
+            {% if stats|length < 5 %}
+            peu de 
+            {% elif stats|length < 10 %}
+            quelques
+            {% else %}
+            beaucoup de 
+            {% endif %}
+            status préférés
+    </p>
+{% endblock %}

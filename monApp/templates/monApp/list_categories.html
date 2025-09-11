@@ -1,17 +1,19 @@
-<html>
-    <head>
-        <title>Mon app DJANGO</title>
-    </head>
-    <body>
-        <h1>Hello mes categories !</h1>
-        <p>Mes categories sont :</p>
-        <ul>
-        {% for cat in ctds %}
-            <li>{{ cat.nomCat }} </li>
-        {% endfor %}
-        </ul>
-        <p>J'ai {{ ctds|length }} categories préférés.</p>
-        <p>
+{% extends 'monApp/base.html' %}
+{% block contenu %}
+<table class="table">
+    <thead>
+        <th>Id</th>
+        <th>Nom Categorie</th>
+    </thead>
+    <tbody>
+    {% for cat in ctds %}
+    <tr>
+        <td>{{ cat.idCat }} </td>
+        <td>{{ cat.nomCat }} </td>
+    </tr>
+    {% endfor %}
+    </tbody>
+</table>
             J'ai
                 {% if ctds|length < 5 %}
                 peu de 
@@ -22,6 +24,4 @@
                 {% endif %}
                 categories préférés
         </p>
-
-    </body>
-</html>
+{% endblock %}
