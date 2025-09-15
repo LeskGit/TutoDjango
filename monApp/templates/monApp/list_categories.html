@@ -9,7 +9,7 @@
     {% for cat in ctds %}
     <tr>
         <td>{{ cat.idCat }} </td>
-        <td>{{ cat.nomCat }} </td>
+        <td><a href="{% url 'dtl_ctd' cat.idCat %}">{{ cat.nomCat }}</a></td>
     </tr>
     {% endfor %}
     </tbody>

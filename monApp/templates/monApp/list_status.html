@@ -10,7 +10,7 @@
     {% for status in stats %}
     <tr>
         <td>{{ status.idStatus }} </td>
-        <td>{{ status.libelleStatus }} </td>
+        <td><a href="{% url 'dtl_status' status.idStatus %}">{{ status.libelleStatus }}</a></td>
     </tr>
     {% endfor %}
     </tbody>
