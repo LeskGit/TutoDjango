@@ -13,11 +13,22 @@
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item">
+                    {% if user.is_authenticated %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'logout' %}">Déconnexion</a>
+                        </li>
+                    {% else %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'login' %}">Connexion</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'register' %}">Inscription</a>
+                        </li>
+                    {% endif %}
                     <li><a class="nav-link" href="{% url 'lst_prdts' %}">Produits</a></li>
                     <li><a class="nav-link" href="{% url 'lst_ctds' %}">Catégories</a></li>
                     <li><a class="nav-link" href="{% url 'lst_status' %}">Status</a></li>
                     <li><a class="nav-link" href="{% url 'lst_rayons' %}">Rayons</a></li>
-                    <li><a class="nav-link" href="{% url 'lst_status' %}">Status</a></li>
                 </li>
             </ul>
         </div>
