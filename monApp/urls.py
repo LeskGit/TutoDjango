@@ -17,8 +17,8 @@ urlpatterns = [
     path("categories/<pk>", views.CategorieDetailView.as_view(), name="dtl_ctd"),
     path("status/<pk>", views.StatusDetailView.as_view(), name="dtl_status"),
     path("rayons/<pk>", views.RayonDetailView.as_view(), name="dtl_rayon"),
-    path("categories", views.listCategories, name="lst_ctds"),
-    path("rayons", views.listRayon, name="lst_rayons"),
-    path("status", views.listStatus, name="lst_status"),
+    path("categories", views.CategorieListView.as_view(), name="lst_ctds"),
+    path("rayons", views.RayonListView.as_view(), name="lst_rayons"),
+    path("status", views.StatusListView.as_view(), name="lst_status"),
     
 ]

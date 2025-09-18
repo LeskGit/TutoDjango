@@ -62,6 +62,48 @@ class ProduitListView(ListView):
         context = super(ProduitListView, self).get_context_data(**kwargs)
         context['titremenu'] = "Liste de mes produits"
         return context
+    
+class CategorieListView(ListView):
+    model = Categorie
+    template_name = "monApp/categories_produits.html"
+    context_object_name = "ctds"
+    # queryset = Categorie.objects.filter(id=2)
+    
+    def get_queryset(self ) :
+        return Categorie.objects.order_by("nomCat")
+    
+    def get_context_data(self, **kwargs):
+        context = super(CategorieListView, self).get_context_data(**kwargs)
+        context['titremenu'] = "Liste de mes categories"
+        return context
+
+class StatusListView(ListView):
+    model = Status
+    template_name = "monApp/list_status.html"
+    context_object_name = "status"
+    # queryset = Status.objects.filter(id=2)
+    
+    def get_queryset(self ) :
+        return Status.objects.order_by("libelleStatus")
+    
+    def get_context_data(self, **kwargs):
+        context = super(StatusListView, self).get_context_data(**kwargs)
+        context['titremenu'] = "Liste de mes status"
+        return context
+    
+class RayonListView(ListView):
+    model = Status
+    template_name = "monApp/list_rayons.html"
+    context_object_name = "status"
+    # queryset = Status.objects.filter(id=2)
+    
+    def get_queryset(self ) :
+        return Rayon.objects.order_by("nomRayon")
+    
+    def get_context_data(self, **kwargs):
+        context = super(RayonListView, self).get_context_data(**kwargs)
+        context['titremenu'] = "Liste de mes rayons"
+        return context
 
 
 class ProduitDetailView(DetailView):
