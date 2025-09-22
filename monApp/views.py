@@ -1,12 +1,15 @@
+from django.forms import BaseModelForm
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, Http404
-from monApp.forms import ContactUsForm
+from django.urls import reverse_lazy
+from monApp.forms import ContactUsForm, ProduitForm
 from monApp.models import Produit, Categorie, Status, Rayon
 from django.views.generic import *
 from django.contrib.auth.views import LoginView
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from django.core.mail import send_mail
+
 
 
 
@@ -71,6 +74,42 @@ def ContactView(request):
     else:
         form = ContactUsForm()
     return render(request, "monApp/page_home.html",{'titreh1':titreh1, 'form':form})
+
+# def ProduitCreate(request):
+#     if request.method == 'POST':
+#         form = ProduitForm(request.POST)
+#         if form.is_valid():
+#             prdt = form.save()
+#             return redirect("dtl_prdt", prdt.refProd)
+#     else:
+#         form = ProduitForm()
+#     return render(request, "monApp/create_produit.html", {'form': form})
+
+class ProduitCreateView(CreateView):
+    model = Produit
+    form_class=ProduitForm
+    template_name = "monApp/create_produit.html"
+    
+    def form_valid(self, form: BaseModelForm) -> HttpResponse:
+        prdt = form.save()
+        return redirect('dtl_prdt', prdt.refProd)
+
+class ProduitUpdateView(UpdateView):
+    model = Produit
+    form_class=ProduitForm
+    template_name = "monApp/update_produit.html"
+    
+    def form_valid(self, form: BaseModelForm) -> HttpResponse:
+        prdt = form.save()
+        return redirect('dtl_prdt', prdt.refProd)
+
+class ProduitDeleteView(DeleteView):
+    model = Produit
+    template_name = "monApp/delete_produit.html"
+    success_url = reverse_lazy('lst_prdts')
+    
+    
+
 
 class ConfirmationEmailView(TemplateView):
     template_name = "monApp/email-sent.html"

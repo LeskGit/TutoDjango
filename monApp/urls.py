@@ -13,6 +13,9 @@ urlpatterns = [
     path("about", views.AboutView.as_view(), name="about"),
     #path("about", views.about, name="about"),
     path("products", views.ProduitListView.as_view(), name="lst_prdts"),
+    path("product", views.ProduitCreateView.as_view(), name="crt_prdt"),
+    path("products/<pk>/update/",views.ProduitUpdateView.as_view(), name="prdt_chng"),
+    path("products/<pk>/delete/",views.ProduitDeleteView.as_view(), name="dlt_prdts"),
     path("products/<pk>", views.ProduitDetailView.as_view(), name="dtl_prdt"),
     path("categories/<pk>", views.CategorieDetailView.as_view(), name="dtl_ctd"),
     path("status/<pk>", views.StatusDetailView.as_view(), name="dtl_status"),
@@ -23,5 +26,5 @@ urlpatterns = [
     path('login', views.ConnectView.as_view(), name='login'),
     path('register', views.RegisterView.as_view(), name='register'),
     path('logout', views.DisconnectView.as_view(), name='logout'),
-    path('email-sent', views.ConfirmationEmailView.as_view(), name="email-sent")
+    path('email-sent', views.ConfirmationEmailView.as_view(), name="email-sent"),
 ]

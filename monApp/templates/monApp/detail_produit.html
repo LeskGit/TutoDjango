@@ -11,5 +11,7 @@
         <li>Date de fabrication : {{ prdt.dateFabProd }} </li>
         <li>Catégorie : {{ prdt.categorie }} </li>
         <li>Statut : {{ prdt.status }}</li>
+        <li><a href="{% url 'prdt_chng' prdt.refProd %}">modifier</a></li>
+        <li><a href="{% url 'dlt_prdts' prdt.refProd %}">Supprimer</a></li>
     </ul>
 {% endblock %}
