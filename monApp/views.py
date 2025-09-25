@@ -9,6 +9,7 @@ from django.contrib.auth.views import LoginView
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from django.core.mail import send_mail
+from django.db.models import Count
 
 
 
@@ -209,7 +210,7 @@ class CategorieListView(ListView):
     # queryset = Categorie.objects.filter(id=2)
     
     def get_queryset(self ) :
-        return Categorie.objects.order_by("nomCat")
+        return Categorie.objects.annotate(nb_produits=Count('produits_categorie')) 
     
     def get_context_data(self, **kwargs):
         context = super(CategorieListView, self).get_context_data(**kwargs)
@@ -262,9 +263,13 @@ class CategorieDetailView(DetailView):
     template_name = "monApp/detail_categorie.html"
     context_object_name = "ctds"
     
+    def get_queryset(self):
+        return Categorie.objects.annotate(nb_produits=Count('produits_categorie'))
+    
     def get_context_data(self, **kwargs):
         context = super(CategorieDetailView, self).get_context_data(**kwargs)
         context['titremenu'] = "Détail de la catégorie"
+        context['prdts'] = self.object.produits_categorie.all()
         return context
         
 

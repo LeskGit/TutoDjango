@@ -3,12 +3,46 @@
     <h1>{{titremenu}}</h1>
 {% endblock %}
 {% block contenu %}
-    <h6><a href="{% url 'lst_ctds' %}">Retour à la liste des catégories</a></h6>
-    <h2>{{ ctds.nomCat }}</h2>
+    <div class="card mb-4">
+    <div class="card-header bg-primary text-white">
+        <h4>Détail de la catégorie</h4>
+    </div>
+    <div class="card-body">
+    <h5 class="card-title">{{ ctds.nomCat }}</h5>
     <ul>
         <li>Référence de la catégorie : {{ctds.idCat }} </li>
         <li>Nom de la catégorie : {{ ctds.nomCat }} </li>
-        <li><a href="{% url 'cat_chng' ctds.idCat %}">modifier</a></li>
-        <li><a href="{% url 'dlt_cat' ctds.idCat %}">Supprimer</a></li>
+        <div class="car-footer text-center">
+            <a href="{% url 'cat_chng' ctds.idCat %}"class="btn btn-warning mt-2">modifier</a>
+            <a href="{% url 'dlt_cat' ctds.idCat %}"  class="btn btn-danger mt-2">Supprimer</a>
+            <a href="{% url 'lst_ctds'%}" class="btn btn-info mt-2">Retour</a>
+        </div>
     </ul>
+</div>
+<div class="card mb-4">
+    <div class="card-header bg-primary text-white">
+        <h4>Cette catégorie contient <strong>{{ ctds.nb_produits }}</strong> produit(s)</h4>
+    </div>
+    <div class="card-body">
+        <div class="row">
+        {% if prdts %}
+        {% for prdt in prdts %}
+        <div class="col-sm-3">
+            <div class="card mb-2 text-center">
+            <div class="card-header bg-info text-white">
+                <h5 class="card-title">{{ prdt.intituleProd }}</h5>
+            </div>
+            <div class="card-body">
+                <a href="{% url 'dtl_prdt' prdt.refProd %}" class="btn btn-primary mt-2">Détails</a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+        {% else %}
+        <p class="text-muted">Aucun produit trouvé pour cette catégorie.</p>
+        {% endif %}
+        </div>
+    </div>
+</div>
+
 {% endblock %}

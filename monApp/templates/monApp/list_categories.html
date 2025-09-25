@@ -4,6 +4,7 @@
     <thead>
         <th>Id</th>
         <th>Nom Categorie</th>
+        <th>Nombre de Produits</th>
         <th><a href="{% url 'crt_cat' %}">Créer une nouvelle catégorie</a></th>
     </thead>
     <tbody>
@@ -11,6 +12,7 @@
     <tr>
         <td>{{ cat.idCat }} </td>
         <td><a href="{% url 'dtl_ctd' cat.idCat %}">{{ cat.nomCat }}</a></td>
+        <td>{{ cat.nb_produits }} </td> 
         <td><a href="{% url 'cat_chng' cat.idCat %}">modifier</a></td>
     </tr>
     {% endfor %}
