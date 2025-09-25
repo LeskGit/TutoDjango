@@ -5,12 +5,15 @@
     <thead>
         <th>Id</th>
         <th>Nom Rayon</th>
+        <th><a href="{% url 'crt_rayon' %}">Créer un nouveau rayon</a></th>
+
     </thead>
     <tbody>
     {% for ray in rayons %}
     <tr>
         <td>{{ ray.idRayon }} </td>
         <td><a href="{% url 'dtl_rayon' ray.idRayon %}">{{ ray.nomRayon }}</a></td>
+        <td><a href="{% url 'rayon_chng' ray.idRayon %}">modifier</a></td>
     </tr>
     {% endfor %}
     </tbody>

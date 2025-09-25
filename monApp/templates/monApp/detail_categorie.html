@@ -8,5 +8,7 @@
     <ul>
         <li>Référence de la catégorie : {{ctds.idCat }} </li>
         <li>Nom de la catégorie : {{ ctds.nomCat }} </li>
+        <li><a href="{% url 'cat_chng' ctds.idCat %}">modifier</a></li>
+        <li><a href="{% url 'dlt_cat' ctds.idCat %}">Supprimer</a></li>
     </ul>
 {% endblock %}

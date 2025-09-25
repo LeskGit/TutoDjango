@@ -5,12 +5,16 @@
     <thead>
         <th>Id</th>
         <th>Libelle status</th>
+        <th><a href="{% url 'crt_status' %}">Créer un nouveau status</a></th>
+
     </thead>
     <tbody>
-    {% for status in stats %}
+    {% for status in status %}
     <tr>
         <td>{{ status.idStatus }} </td>
         <td><a href="{% url 'dtl_status' status.idStatus %}">{{ status.libelleStatus }}</a></td>
+        <td><a href="{% url 'status_chng' status.idStatus %}">modifier</a></td>
+
     </tr>
     {% endfor %}
     </tbody>

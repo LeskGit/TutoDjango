@@ -8,5 +8,7 @@
     <ul>
         <li>Référence du status : {{status.idStatus }} </li>
         <li>Nom du status : {{ status.libelleStatus }} </li>
+        <li><a href="{% url 'status_chng' status.idStatus %}">modifier</a></li>
+        <li><a href="{% url 'dlt_status' status.idStatus %}">Supprimer</a></li>
     </ul>
 {% endblock %}
