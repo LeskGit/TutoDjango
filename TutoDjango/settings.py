@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     # Mes apps
     'monApp',
     'debug_toolbar',
+    'django_extensions',
 ]
 
 INTERNAL_IPS = [

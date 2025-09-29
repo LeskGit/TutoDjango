@@ -5,6 +5,7 @@
     <thead>
         <th>Id</th>
         <th>Libelle status</th>
+        <th>Nombre de Produits</th>
         <th><a href="{% url 'crt_status' %}">Créer un nouveau status</a></th>
 
     </thead>
@@ -13,6 +14,7 @@
     <tr>
         <td>{{ status.idStatus }} </td>
         <td><a href="{% url 'dtl_status' status.idStatus %}">{{ status.libelleStatus }}</a></td>
+        <td>{{ status.nb_produits }} </td> 
         <td><a href="{% url 'status_chng' status.idStatus %}">modifier</a></td>
 
     </tr>

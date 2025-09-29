@@ -1,14 +1,49 @@
 {% extends 'monApp/base.html' %}
 {% block menu %}
-    <h1>{{titremenu}}</h1>
+    <h1>{{ titremenu }}</h1>
 {% endblock %}
 {% block contenu %}
-    <h6><a href="{% url 'lst_status' %}">Retour à la liste des status</a></h6>
-    <h2>{{ status.libelleStatus }}</h2>
-    <ul>
-        <li>Référence du status : {{status.idStatus }} </li>
-        <li>Nom du status : {{ status.libelleStatus }} </li>
-        <li><a href="{% url 'status_chng' status.idStatus %}">modifier</a></li>
-        <li><a href="{% url 'dlt_status' status.idStatus %}">Supprimer</a></li>
-    </ul>
+<div class="card mb-4">
+    <div class="card-header bg-primary text-white">
+        <h4>Détail du status</h4>
+    </div>
+    <div class="card-body">
+        <h5 class="card-title">{{ status.libelleStatus }}</h5>
+        <ul>
+            <li>Référence du status : {{ status.idStatus }}</li>
+            <li>Nom du status : {{ status.libelleStatus }}</li>
+        </ul>
+        <div class="card-footer text-center">
+            <a href="{% url 'status_chng' status.idStatus %}" class="btn btn-warning mt-2">Modifier</a>
+            <a href="{% url 'dlt_status' status.idStatus %}" class="btn btn-danger mt-2">Supprimer</a>
+            <a href="{% url 'lst_status' %}" class="btn btn-info mt-2">Retour</a>
+        </div>
+    </div>
+</div>
+
+<div class="card mb-4">
+    <div class="card-header bg-primary text-white">
+        <h4>Ce status est utilisé pour <strong>{{ status.nb_produits }}</strong> produit(s)</h4>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            {% if prdts %}
+                {% for prdt in prdts %}
+                <div class="col-sm-3">
+                    <div class="card mb-2 text-center">
+                        <div class="card-header bg-info text-white">
+                            <h5 class="card-title">{{ prdt.intituleProd }}</h5>
+                        </div>
+                        <div class="card-body">
+                            <a href="{% url 'dtl_prdt' prdt.refProd %}" class="btn btn-primary mt-2">Détails</a>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <p class="text-muted">Aucun produit trouvé pour ce status.</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
 {% endblock %}

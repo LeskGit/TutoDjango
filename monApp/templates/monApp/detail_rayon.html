@@ -1,14 +1,48 @@
 {% extends 'monApp/base.html' %}
 {% block menu %}
-    <h1>{{titremenu}}</h1>
+    <h1>{{ titremenu }}</h1>
 {% endblock %}
 {% block contenu %}
     <h6><a href="{% url 'lst_rayons' %}">Retour à la liste des rayons</a></h6>
     <h2>{{ rayons.nomRayon }}</h2>
     <ul>
-        <li>Référence du rayon : {{rayons.idRayon }} </li>
-        <li>Nom du rayon : {{ rayons.nomRayon }} </li>
-        <li><a href="{% url 'rayon_chng' rayons.idRayon %}">modifier</a></li>
+        <li>Référence du rayon : {{ rayons.idRayon }}</li>
+        <li>Nom du rayon : {{ rayons.nomRayon }}</li>
+        <li><a href="{% url 'rayon_chng' rayons.idRayon %}">Modifier</a></li>
         <li><a href="{% url 'dlt_rayon' rayons.idRayon %}">Supprimer</a></li>
     </ul>
+
+    <div class="card mb-4">
+        <div class="card-header bg-primary text-white">
+            <h4>
+                Ce rayon contient <strong>{{ total_nb_produit }}</strong> produit(s) 
+                pour un total de <strong>{{ total_rayon|floatformat:2 }} €</strong>
+            </h4>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                {% if prdts_dt %}
+                    {% for data in prdts_dt %}
+                        <div class="col-sm-3">
+                            <div class="card mb-2 text-center">
+                                <div class="card-header bg-info text-white">
+                                    <h5 class="card-title">{{ data.produit.intituleProd }}</h5>
+                                </div>
+                                <div class="card-body">
+                                    <ul class="list-unstyled">
+                                        <li>Prix unitaire : {{ data.prix_unitaire }} €</li>
+                                        <li>Quantité : {{ data.qte }}</li>
+                                        <li>Total : {{ data.total_produit }} €</li>
+                                    </ul>
+                                    <a href="{% url 'dtl_prdt' data.produit.refProd %}" class="btn btn-primary mt-2">Détails</a>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <p class="text-muted">Aucun produit trouvé pour ce rayon.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
 {% endblock %}

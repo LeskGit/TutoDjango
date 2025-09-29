@@ -224,7 +224,7 @@ class StatusListView(ListView):
     # queryset = Status.objects.filter(id=2)
     
     def get_queryset(self ) :
-        return Status.objects.order_by("libelleStatus")
+        return Status.objects.annotate(nb_produits=Count('produits_status')) 
     
     def get_context_data(self, **kwargs):
         context = super(StatusListView, self).get_context_data(**kwargs)
@@ -232,7 +232,7 @@ class StatusListView(ListView):
         return context
     
 class RayonListView(ListView):
-    model = Status
+    model = Rayon
     template_name = "monApp/list_rayons.html"
     context_object_name = "rayons"
     # queryset = Status.objects.filter(id=2)
@@ -243,6 +243,13 @@ class RayonListView(ListView):
     def get_context_data(self, **kwargs):
         context = super(RayonListView, self).get_context_data(**kwargs)
         context['titremenu'] = "Liste de mes rayons"
+        ryns_dt = []
+        for rayon in context['rayons']:
+            total = 0
+            for contenir in rayon.contenir_rayon.all():
+                total += contenir.produit.prixUnitaireProd * contenir.Qte
+            ryns_dt.append({'rayon': rayon, 'total_stock': total})
+        context['ryns_dt'] = ryns_dt
         return context
 
 
@@ -279,9 +286,13 @@ class StatusDetailView(DetailView):
     template_name = "monApp/detail_status.html"
     context_object_name = "status"
     
+    def get_queryset(self):
+        return Status.objects.annotate(nb_produits=Count('produits_status'))
+    
     def get_context_data(self, **kwargs):
         context = super(StatusDetailView, self).get_context_data(**kwargs)
         context['titremenu'] = "Détail du status"
+        context['prdts'] = self.object.produits_status.all()
         return context
         
 class RayonDetailView(DetailView):
@@ -292,6 +303,23 @@ class RayonDetailView(DetailView):
     def get_context_data(self, **kwargs):
         context = super(RayonDetailView, self).get_context_data(**kwargs)
         context['titremenu'] = "Détail du rayon"
+        
+        prdts_dt = []
+        total_rayon = 0
+        total_nb_produit = 0
+        for contenir in self.object.contenir_rayon.all():
+            total_produit = contenir.produit.prixUnitaireProd * contenir.Qte
+            prdts_dt.append({ 'produit': contenir.produit,
+                    'qte': contenir.Qte,
+                    'prix_unitaire': contenir.produit.prixUnitaireProd,
+                    'total_produit': total_produit} )
+            total_rayon += total_produit
+            total_nb_produit += contenir.Qte
+            
+        context['prdts_dt'] = prdts_dt
+        context['total_rayon'] = total_rayon
+        context['total_nb_produit'] = total_nb_produit
+        
         return context
         
 
