@@ -2,14 +2,16 @@ from django.forms import BaseModelForm
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, Http404
 from django.urls import reverse_lazy
-from monApp.forms import ContactUsForm, ProduitForm, CategorieForm, StatusForm, RayonForm
-from monApp.models import Produit, Categorie, Status, Rayon
+from monApp.forms import ContactUsForm, ProduitForm, CategorieForm, StatusForm, RayonForm, ContenirForm
+from monApp.models import Contenir, Produit, Categorie, Status, Rayon
 from django.views.generic import *
 from django.contrib.auth.views import LoginView
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from django.core.mail import send_mail
-from django.db.models import Count
+from django.db.models import Count, Prefetch
+from django.utils.decorators import method_decorator
+from django.contrib.auth.decorators import login_required
 
 
 
@@ -189,20 +191,28 @@ class ConfirmationEmailView(TemplateView):
         context['message'] = "L'email à bien été envoyé"
         return context
     
+@method_decorator(login_required, name='dispatch')
 class ProduitListView(ListView):
     model = Produit
     template_name = "monApp/list_produits.html"
     context_object_name = "prdts"
     # queryset = Produit.objects.filter(id=2)
     
-    def get_queryset(self ) :
-        return Produit.objects.order_by("prixUnitaireProd")
+    # def get_queryset(self ) :
+    #     return Produit.objects.order_by("prixUnitaireProd")
+    
+    def get_queryset(self):
+        query = self.request.GET.get('search')
+        if query:
+            return Produit.objects.filter(intituleProd__icontains=query).select_related('categorie').select_related('status')
+        return Produit.objects.select_related('categorie').select_related('status')
     
     def get_context_data(self, **kwargs):
         context = super(ProduitListView, self).get_context_data(**kwargs)
         context['titremenu'] = "Liste de mes produits"
         return context
     
+@method_decorator(login_required, name='dispatch')
 class CategorieListView(ListView):
     model = Categorie
     template_name = "monApp/list_categories.html"
@@ -210,6 +220,9 @@ class CategorieListView(ListView):
     # queryset = Categorie.objects.filter(id=2)
     
     def get_queryset(self ) :
+        query = self.request.GET.get('search')
+        if query:
+            return Categorie.objects.filter(nomCat__icontains=query).annotate(nb_produits=Count('produits_categorie'))
         return Categorie.objects.annotate(nb_produits=Count('produits_categorie')) 
     
     def get_context_data(self, **kwargs):
@@ -217,6 +230,7 @@ class CategorieListView(ListView):
         context['titremenu'] = "Liste de mes categories"
         return context
 
+@method_decorator(login_required, name='dispatch')
 class StatusListView(ListView):
     model = Status
     template_name = "monApp/list_status.html"
@@ -224,6 +238,9 @@ class StatusListView(ListView):
     # queryset = Status.objects.filter(id=2)
     
     def get_queryset(self ) :
+        query = self.request.GET.get('search')
+        if query:
+            return Status.objects.filter(libelleStatus__icontains=query).annotate(nb_produits=Count('produits_status'))
         return Status.objects.annotate(nb_produits=Count('produits_status')) 
     
     def get_context_data(self, **kwargs):
@@ -231,14 +248,23 @@ class StatusListView(ListView):
         context['titremenu'] = "Liste de mes status"
         return context
     
+@method_decorator(login_required, name='dispatch')
 class RayonListView(ListView):
     model = Rayon
     template_name = "monApp/list_rayons.html"
     context_object_name = "rayons"
     # queryset = Status.objects.filter(id=2)
     
-    def get_queryset(self ) :
-        return Rayon.objects.order_by("nomRayon")
+    # def get_queryset(self ) :
+    #     return Rayon.objects.order_by("nomRayon")
+    
+    def get_queryset(self):
+        # Précharge tous les "contenir" de chaque rayon,
+        # et en même temps le produit de chaque contenir
+        query = self.request.GET.get('search')
+        if query:
+            return Rayon.objects.filter(nomRayon__icontains=query).prefetch_related(Prefetch("contenir_rayon", queryset=Contenir.objects.select_related("produit")))
+        return Rayon.objects.prefetch_related(Prefetch("contenir_rayon", queryset=Contenir.objects.select_related("produit")))
     
     def get_context_data(self, **kwargs):
         context = super(RayonListView, self).get_context_data(**kwargs)
@@ -252,7 +278,7 @@ class RayonListView(ListView):
         context['ryns_dt'] = ryns_dt
         return context
 
-
+@method_decorator(login_required, name='dispatch')
 class ProduitDetailView(DetailView):
     model = Produit
     template_name = "monApp/detail_produit.html"
@@ -264,7 +290,7 @@ class ProduitDetailView(DetailView):
         return context
         
 
-
+@method_decorator(login_required, name='dispatch')
 class CategorieDetailView(DetailView):
     model = Categorie
     template_name = "monApp/detail_categorie.html"
@@ -280,7 +306,7 @@ class CategorieDetailView(DetailView):
         return context
         
 
-
+@method_decorator(login_required, name='dispatch')
 class StatusDetailView(DetailView):
     model = Status
     template_name = "monApp/detail_status.html"
@@ -294,7 +320,8 @@ class StatusDetailView(DetailView):
         context['titremenu'] = "Détail du status"
         context['prdts'] = self.object.produits_status.all()
         return context
-        
+
+@method_decorator(login_required, name='dispatch')     
 class RayonDetailView(DetailView):
     model = Rayon
     template_name = "monApp/detail_rayon.html"
@@ -322,7 +349,58 @@ class RayonDetailView(DetailView):
         
         return context
         
+class ContenirCreateView(CreateView):
+    model = Contenir
+    form_class = ContenirForm
+    template_name = 'monApp/create_contenir.html'
+    
+    def get_context_data(self, **kwargs):
+        context = super(ContenirCreateView, self).get_context_data(**kwargs)
+        pk = self.kwargs.get('pk')
+        try:
+            rayon = Rayon.objects.get(idRayon=pk)
+            context['rayons'] = rayon
+        except Rayon.DoesNotExist:
+            raise Http404("Rayon inexistant")
+        return context
+    
+    def form_valid(self, form: BaseModelForm) -> HttpResponse:
+        pk = self.kwargs.get('pk')
+        rayon = Rayon.objects.get(idRayon=pk)
+        form.instance.rayon = rayon   
+        contenir = form.save()
+        return redirect('dtl_rayon', pk=pk)
+    
 
+class ContenirUpdateView(UpdateView):
+    model = Contenir
+    form_class = ContenirForm
+    template_name = 'monApp/update_contenir.html'
+    
+    def get_context_data(self, **kwargs):
+        context = super(ContenirUpdateView, self).get_context_data(**kwargs)
+        pk = self.kwargs.get('pk')
+        try:
+            contenir = Contenir.objects.get(pk=pk)
+            context['rayons'] = contenir.rayon
+        except Contenir.DoesNotExist:
+            raise Http404("Contenir inexistant")
+        return context
+    
+    def form_valid(self, form: BaseModelForm) -> HttpResponse:
+        contenir = form.save()
+        if contenir.Qte <= 0:
+            contenir.delete()
+            return redirect('lst_rayons')
+        return redirect('dtl_rayon', pk=contenir.rayon.idRayon)
+    
+    
+class ContenirDeleteView(DeleteView):
+    model = Contenir
+    template_name = "monApp/delete_contenir.html"
+    success_url = reverse_lazy('lst_rayons')
+    
+    
 class ConnectView(LoginView):
     
     template_name = 'monApp/page_login.html'

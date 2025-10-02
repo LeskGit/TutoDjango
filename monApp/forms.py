@@ -1,5 +1,5 @@
 from django import forms
-from monApp.models import Produit, Categorie, Status, Rayon
+from monApp.models import Contenir, Produit, Categorie, Status, Rayon
 
 class ContactUsForm(forms.Form):
     name = forms.CharField(required=False)
@@ -31,3 +31,7 @@ class StatusForm(forms.ModelForm):
         model = Status
         fields = '__all__'
         
+class ContenirForm(forms.ModelForm):
+    class Meta:
+        model = Contenir
+        fields = ('produit', 'Qte')

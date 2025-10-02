@@ -36,4 +36,7 @@ urlpatterns = [
     path('register', views.RegisterView.as_view(), name='register'),
     path('logout', views.DisconnectView.as_view(), name='logout'),
     path('email-sent', views.ConfirmationEmailView.as_view(), name="email-sent"),
+    path('rayon/<pk>/cntnr', views.ContenirCreateView.as_view(), name='cntnr-crt'),
+    path('contenir/<pk>/update', views.ContenirUpdateView.as_view(), name='cntnr-chng'),
+    path('contenir/<pk>/delete', views.ContenirDeleteView.as_view(), name='cntnr-dlt'),
 ]
