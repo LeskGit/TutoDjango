@@ -88,6 +88,7 @@ def ContactView(request):
 #         form = ProduitForm()
 #     return render(request, "monApp/create_produit.html", {'form': form})
 
+@method_decorator(login_required, name='dispatch')   
 class ProduitCreateView(CreateView):
     model = Produit
     form_class=ProduitForm
@@ -97,6 +98,7 @@ class ProduitCreateView(CreateView):
         prdt = form.save()
         return redirect('dtl_prdt', prdt.refProd)
 
+@method_decorator(login_required, name='dispatch')   
 class ProduitUpdateView(UpdateView):
     model = Produit
     form_class=ProduitForm
@@ -106,12 +108,13 @@ class ProduitUpdateView(UpdateView):
         prdt = form.save()
         return redirect('dtl_prdt', prdt.refProd)
 
+@method_decorator(login_required, name='dispatch')   
 class ProduitDeleteView(DeleteView):
     model = Produit
     template_name = "monApp/delete_produit.html"
     success_url = reverse_lazy('lst_prdts')
     
-    
+@method_decorator(login_required, name='dispatch')   
 class CategorieCreateView(CreateView):
     model = Categorie
     form_class=CategorieForm
@@ -121,6 +124,7 @@ class CategorieCreateView(CreateView):
         cat = form.save()
         return redirect('dtl_ctd', cat.idCat)
 
+@method_decorator(login_required, name='dispatch')   
 class CategorieUpdateView(UpdateView):
     model = Categorie
     form_class=CategorieForm
@@ -130,11 +134,13 @@ class CategorieUpdateView(UpdateView):
         cat = form.save()
         return redirect('dtl_ctd', cat.idCat)
 
+@method_decorator(login_required, name='dispatch')   
 class CategorieDeleteView(DeleteView):
     model = Categorie
     template_name = "monApp/delete_categorie.html"
     success_url = reverse_lazy('lst_ctds')
-    
+
+@method_decorator(login_required, name='dispatch')   
 class RayonCreateView(CreateView):
     model = Categorie
     form_class=RayonForm
@@ -144,6 +150,7 @@ class RayonCreateView(CreateView):
         rayon = form.save()
         return redirect('dtl_rayon', rayon.idRayon)
 
+@method_decorator(login_required, name='dispatch')   
 class RayonUpdateView(UpdateView):
     model = Rayon
     form_class=RayonForm
@@ -153,11 +160,13 @@ class RayonUpdateView(UpdateView):
         rayon = form.save()
         return redirect('dtl_rayon', rayon.idRayon)
 
+@method_decorator(login_required, name='dispatch')   
 class RayonDeleteView(DeleteView):
     model = Rayon
     template_name = "monApp/delete_rayon.html"
     success_url = reverse_lazy('lst_rayons')
-    
+
+@method_decorator(login_required, name='dispatch')   
 class StatusCreateView(CreateView):
     model = Status
     form_class=StatusForm
@@ -167,6 +176,7 @@ class StatusCreateView(CreateView):
         status = form.save()
         return redirect('dtl_status', status.idStatus)
 
+@method_decorator(login_required, name='dispatch')   
 class StatusUpdateView(UpdateView):
     model = Status
     form_class= StatusForm
@@ -176,6 +186,7 @@ class StatusUpdateView(UpdateView):
         status = form.save()
         return redirect('dtl_status', status.idStatus)
 
+@method_decorator(login_required, name='dispatch')   
 class StatusDeleteView(DeleteView):
     model = Status
     template_name = "monApp/delete_status.html"
@@ -190,8 +201,7 @@ class ConfirmationEmailView(TemplateView):
         context = super(ConfirmationEmailView, self).get_context_data(**kwargs)
         context['message'] = "L'email à bien été envoyé"
         return context
-    
-@method_decorator(login_required, name='dispatch')
+
 class ProduitListView(ListView):
     model = Produit
     template_name = "monApp/list_produits.html"
@@ -211,8 +221,7 @@ class ProduitListView(ListView):
         context = super(ProduitListView, self).get_context_data(**kwargs)
         context['titremenu'] = "Liste de mes produits"
         return context
-    
-@method_decorator(login_required, name='dispatch')
+
 class CategorieListView(ListView):
     model = Categorie
     template_name = "monApp/list_categories.html"
@@ -230,7 +239,6 @@ class CategorieListView(ListView):
         context['titremenu'] = "Liste de mes categories"
         return context
 
-@method_decorator(login_required, name='dispatch')
 class StatusListView(ListView):
     model = Status
     template_name = "monApp/list_status.html"
@@ -247,8 +255,7 @@ class StatusListView(ListView):
         context = super(StatusListView, self).get_context_data(**kwargs)
         context['titremenu'] = "Liste de mes status"
         return context
-    
-@method_decorator(login_required, name='dispatch')
+
 class RayonListView(ListView):
     model = Rayon
     template_name = "monApp/list_rayons.html"
@@ -278,7 +285,6 @@ class RayonListView(ListView):
         context['ryns_dt'] = ryns_dt
         return context
 
-@method_decorator(login_required, name='dispatch')
 class ProduitDetailView(DetailView):
     model = Produit
     template_name = "monApp/detail_produit.html"
@@ -290,7 +296,6 @@ class ProduitDetailView(DetailView):
         return context
         
 
-@method_decorator(login_required, name='dispatch')
 class CategorieDetailView(DetailView):
     model = Categorie
     template_name = "monApp/detail_categorie.html"
@@ -306,7 +311,6 @@ class CategorieDetailView(DetailView):
         return context
         
 
-@method_decorator(login_required, name='dispatch')
 class StatusDetailView(DetailView):
     model = Status
     template_name = "monApp/detail_status.html"
@@ -321,7 +325,6 @@ class StatusDetailView(DetailView):
         context['prdts'] = self.object.produits_status.all()
         return context
 
-@method_decorator(login_required, name='dispatch')     
 class RayonDetailView(DetailView):
     model = Rayon
     template_name = "monApp/detail_rayon.html"
@@ -349,6 +352,7 @@ class RayonDetailView(DetailView):
         
         return context
         
+@method_decorator(login_required, name='dispatch')   
 class ContenirCreateView(CreateView):
     model = Contenir
     form_class = ContenirForm
@@ -372,6 +376,7 @@ class ContenirCreateView(CreateView):
         return redirect('dtl_rayon', pk=pk)
     
 
+@method_decorator(login_required, name='dispatch')   
 class ContenirUpdateView(UpdateView):
     model = Contenir
     form_class = ContenirForm
@@ -394,7 +399,7 @@ class ContenirUpdateView(UpdateView):
             return redirect('lst_rayons')
         return redirect('dtl_rayon', pk=contenir.rayon.idRayon)
     
-    
+@method_decorator(login_required, name='dispatch')   
 class ContenirDeleteView(DeleteView):
     model = Contenir
     template_name = "monApp/delete_contenir.html"
