@@ -55,3 +55,26 @@ class CategorieUrlsTest(TestCase):
     def test_categorie_create_response_code_OK(self):
         response = self.client.get(reverse('crt_cat'))
         self.assertEqual(response.status_code, 200)
+
+    def test_redirect_after_categorie_creation(self):
+        response = self.client.post(reverse('crt_cat'), {'nomCat': 'CategoriePourTestRedirectionCreation'} )
+        # Statut 302 = redirection
+        self.assertEqual(response.status_code, 302)
+        # Redirection vers la vue de detail
+        self.assertRedirects(response, '/monApp/categories/2')
+        
+    def test_redirect_after_categorie_updating(self):
+        response = self.client.post(reverse('cat_chng', args=[self.ctgr.idCat]),
+        data={"nomCat": "CategoriePourTestRedirectionMaj"})
+        # Statut 302 = redirection
+        self.assertEqual(response.status_code, 302)
+        # Redirection vers la vue de detail
+        self.assertRedirects(response, f'/monApp/categories/{self.ctgr.idCat}')
+        
+    def test_redirect_after_categorie_deletion(self):
+        response = self.client.post(reverse('dlt_cat', args=[self.ctgr.pk]))
+        # Vérifie qu'on a bien une redirection
+        self.assertEqual(response.status_code, 302)
+        self.assertRedirects(response, reverse('lst_ctds'))
+        # Vérifie que la catégorie a bien été supprimée de la base
+        self.assertFalse(Categorie.objects.filter(pk=self.ctgr.pk).exists())
