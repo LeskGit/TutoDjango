@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'monApp',
     'debug_toolbar',
     'django_extensions',
+    'rest_framework',
 ]
 
 INTERNAL_IPS = [
@@ -137,3 +138,5 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 LOGIN_URL = 'login'
+
+LOGIN_REDIRECT_URL = '/monApp/home/'

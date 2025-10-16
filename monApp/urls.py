@@ -1,4 +1,4 @@
-from django.urls import path
+from django.urls import include, path
 from . import views
 from django.views.generic import *
 
@@ -39,4 +39,8 @@ urlpatterns = [
     path('rayon/<pk>/contenir', views.ContenirCreateView.as_view(), name='cntnr-crt'),
     path('rayon/<pk>/contenir/<pkp>/update', views.ContenirUpdateView.as_view(), name='cntnr-chng'),
     path('rayon/<pk>/contenir/<pkp>/delete', views.ContenirDeleteView.as_view(), name='cntnr-dlt'),
+    
+    path("api/", include("monApp.api.urls")), # routes API regroupées
+
 ]
+

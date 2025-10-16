@@ -1,7 +1,7 @@
 [run]
-source=monApp
-omit = 
-    /migrations/
-    /settings/
-    /tests/
-    __init__.py
+source = monApp
+omit =
+    */migrations/*
+    */settings/*
+    */tests/*
+    */__init__.py

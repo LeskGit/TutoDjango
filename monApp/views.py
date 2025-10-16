@@ -12,10 +12,30 @@ from django.core.mail import send_mail
 from django.db.models import Count, Prefetch
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
+from rest_framework import generics
+from monApp.models import Categorie
+from monApp.api.serializers import CategorieSerializer, ContenirSerializer, ProduitSerializer, RayonSerializer, StatusSerializer
 
+class CategorieListAPI(generics.ListCreateAPIView):
+    queryset = Categorie.objects.all()
+    serializer_class = CategorieSerializer
+    
 
+class ProduitListAPI(generics.ListCreateAPIView):
+    queryset = Produit.objects.all()
+    serializer_class = ProduitSerializer
+    
+class RayonListAPI(generics.ListCreateAPIView):
+    queryset = Rayon.objects.all()
+    serializer_class = RayonSerializer
 
+class StatusListAPI(generics.ListCreateAPIView):
+    queryset = Status.objects.all()
+    serializer_class = StatusSerializer
 
+class ContenirListAPI(generics.ListCreateAPIView):
+    queryset = Contenir.objects.all()
+    serializer_class = ContenirSerializer
 
 class HomeView(TemplateView):
     template_name = "monApp/page_home.html"
