@@ -26,6 +26,7 @@ class ContenirCreateViewTest(TestCase):
         url = reverse('cntnr-crt', args=[self.rayon.idRayon])
         data = {
             "produit": self.produit.refProd,
+            "rayon": self.rayon.idRayon,      
             "Qte": 5
         }
         response = self.client.post(url, data)
@@ -36,6 +37,7 @@ class ContenirCreateViewTest(TestCase):
         self.assertEqual(contenir.produit, self.produit)
         self.assertEqual(contenir.rayon, self.rayon)
         self.assertEqual(contenir.Qte, 5)
+
 
 
 class ContenirUpdateViewTest(TestCase):
@@ -53,13 +55,13 @@ class ContenirUpdateViewTest(TestCase):
         self.contenir = Contenir.objects.create(produit=self.produit, rayon=self.rayon, Qte=10)
         
     def test_contenir_update_view_get(self):
-        url = reverse('cntnr-chng', args=[self.contenir.rayon.idRayon])
+        url = reverse('cntnr-chng', args=[self.contenir.rayon.idRayon, self.contenir.produit.refProd])
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'monApp/update_contenir.html')
         
     def test_contenir_update_view_post_valid(self):
-        url = reverse('cntnr-chng', args=[self.contenir.rayon.idRayon])
+        url = reverse('cntnr-chng', args=[self.contenir.rayon.idRayon, self.contenir.produit.refProd])
         data = {
             "produit": self.produit.refProd,
             "rayon": self.rayon.idRayon,
@@ -86,14 +88,14 @@ class ContenirDeleteViewTest(TestCase):
         self.contenir = Contenir.objects.create(produit=self.produit, rayon=self.rayon, Qte=8)
             
     def test_contenir_delete_view_get(self):
-        url = reverse('cntnr-dlt', args=[self.contenir.rayon.idRayon])
+        url = reverse('cntnr-dlt', args=[self.contenir.rayon.idRayon, self.contenir.produit.refProd])
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'monApp/delete_contenir.html')
         
     def test_contenir_delete_view_post(self):
-        url = reverse('cntnr-dlt', args=[self.contenir.rayon.idRayon])
+        url = reverse('cntnr-dlt', args=[self.contenir.rayon.idRayon, self.contenir.produit.refProd])
         response = self.client.post(url)
         self.assertEqual(response.status_code, 302)
-        self.assertFalse(Contenir.objects.filter(id=self.contenir.rayon.idRayon).exists())
-        self.assertRedirects(response, reverse('lst_rayons'))
+        self.assertFalse(Contenir.objects.filter(id=self.contenir.id).exists())
+        self.assertRedirects(response, reverse('dtl_rayon', args=[self.rayon.idRayon]))

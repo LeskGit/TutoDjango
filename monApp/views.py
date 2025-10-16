@@ -1,5 +1,5 @@
 from django.forms import BaseModelForm
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse, Http404
 from django.urls import reverse_lazy
 from monApp.forms import ContactUsForm, ProduitForm, CategorieForm, StatusForm, RayonForm, ContenirForm
@@ -376,35 +376,53 @@ class ContenirCreateView(CreateView):
         return redirect('dtl_rayon', pk=pk)
     
 
-@method_decorator(login_required, name='dispatch')   
+@method_decorator(login_required, name='dispatch')
 class ContenirUpdateView(UpdateView):
     model = Contenir
-    form_class = ContenirForm
-    template_name = 'monApp/update_contenir.html'
+    form_class=ContenirForm
+    template_name = "monApp/update_contenir.html"
+    
+    def get_object(self):
+        rayon = self.kwargs.get("pk")
+        produit = self.kwargs.get("pkp")
+        return get_object_or_404(
+            Contenir, rayon_id=rayon, produit_id=produit
+        )
     
     def get_context_data(self, **kwargs):
-        context = super(ContenirUpdateView, self).get_context_data(**kwargs)
-        pk = self.kwargs.get('pk')
-        try:
-            contenir = Contenir.objects.get(pk=pk)
-            context['rayons'] = contenir.rayon
-        except Contenir.DoesNotExist:
-            raise Http404("Contenir inexistant")
+        context = super().get_context_data(**kwargs)
+        rayon = Rayon.objects.get(pk=self.kwargs.get('pk'))
+        produit = Produit.objects.get(pk=self.kwargs.get('pkp'))
+        context["rayon"] = rayon
+        context["produit"] = produit
         return context
-    
+
     def form_valid(self, form: BaseModelForm) -> HttpResponse:
-        contenir = form.save()
-        if contenir.Qte <= 0:
-            contenir.delete()
-            return redirect('lst_rayons')
-        return redirect('dtl_rayon', pk=contenir.rayon.idRayon)
-    
-@method_decorator(login_required, name='dispatch')   
+        item = form.save()
+        if item.Qte == 0:
+            item.delete()
+        return redirect('dtl_rayon', item.rayon.idRayon)
+
+@method_decorator(login_required, name='dispatch')
 class ContenirDeleteView(DeleteView):
     model = Contenir
     template_name = "monApp/delete_contenir.html"
-    success_url = reverse_lazy('lst_rayons')
     
+    def get_success_url(self):
+        return reverse_lazy("dtl_rayon", kwargs={"pk": self.kwargs.get('pk')})
+    
+    def get_object(self, queryset=None):
+        rayon = self.kwargs.get("pk")
+        produit = self.kwargs.get("pkp")
+        return get_object_or_404(
+            Contenir, rayon_id=rayon, produit_id=produit
+        )
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["rayon"] = Rayon.objects.get(pk=self.kwargs.get('pk'))
+        context["produit"] = Produit.objects.get(pk=self.kwargs.get('pkp'))
+        return context
     
 class ConnectView(LoginView):
     

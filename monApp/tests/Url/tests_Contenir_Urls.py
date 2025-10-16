@@ -20,12 +20,12 @@ class ProduitUrlsTest(TestCase):
         self.assertEqual(resolve(url).func.view_class, ContenirCreateView)
 
     def test_Contenir_update_url_is_resolved(self):
-        url = reverse('cntnr-chng', args=[1])
+        url = reverse('cntnr-chng', args=[1, 1])
         self.assertEqual(resolve(url).view_name, 'cntnr-chng')
         self.assertEqual(resolve(url).func.view_class, ContenirUpdateView)
         
     def test_Contenir_delete_url_is_resolved(self):
-        url = reverse('cntnr-dlt', args=[1])
+        url = reverse('cntnr-dlt', args=[1, 1])
         self.assertEqual(resolve(url).view_name, 'cntnr-dlt')
         self.assertEqual(resolve(url).func.view_class, ContenirDeleteView)
 

@@ -42,9 +42,8 @@ class Contenir(models.Model):
     rayon = models.ForeignKey(Rayon, on_delete=models.CASCADE, related_name="contenir_rayon")
     Qte = models.PositiveIntegerField()
 
-    # class Meta:
-    #     unique_together = ('produit', 'rayon')  # Un produit dans un rayon spécifique est unique
+    class Meta:
+        unique_together = ('produit', 'rayon')  
 
     def __str__(self):
         return f"{self.produit} dans {self.rayon} (Qte: {self.Qte})"
-    

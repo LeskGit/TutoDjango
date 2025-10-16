@@ -6,9 +6,9 @@ urlpatterns = [
     #path('home',views.home ,name='home'), # Par defaut 
     #path('home/<str:param>',views.home ,name='home'),
     path("home", views.HomeView.as_view(), name="home"),
-    path("home/<str:param>", views.HomeView.as_view()),
+    path("home/<str:param>", views.HomeView.as_view(), name="home_param"),
     # path("contact/<str:param>", views.ContactView.as_view()),
-    path("about/<str:param>", views.AboutView.as_view()),
+    path("about/<str:param>", views.AboutView.as_view(), name="about_param"),
     path("contact", views.ContactView, name="contact"),
     path("about", views.AboutView.as_view(), name="about"),
     #path("about", views.about, name="about"),
@@ -36,7 +36,7 @@ urlpatterns = [
     path('register', views.RegisterView.as_view(), name='register'),
     path('logout', views.DisconnectView.as_view(), name='logout'),
     path('email-sent', views.ConfirmationEmailView.as_view(), name="email-sent"),
-    path('rayon/<pk>/cntnr', views.ContenirCreateView.as_view(), name='cntnr-crt'),
-    path('contenir/<pk>/update', views.ContenirUpdateView.as_view(), name='cntnr-chng'),
-    path('contenir/<pk>/delete', views.ContenirDeleteView.as_view(), name='cntnr-dlt'),
+    path('rayon/<pk>/contenir', views.ContenirCreateView.as_view(), name='cntnr-crt'),
+    path('rayon/<pk>/contenir/<pkp>/update', views.ContenirUpdateView.as_view(), name='cntnr-chng'),
+    path('rayon/<pk>/contenir/<pkp>/delete', views.ContenirDeleteView.as_view(), name='cntnr-dlt'),
 ]

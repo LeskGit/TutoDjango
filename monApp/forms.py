@@ -34,4 +34,7 @@ class StatusForm(forms.ModelForm):
 class ContenirForm(forms.ModelForm):
     class Meta:
         model = Contenir
-        fields = ('produit', 'Qte')
+        fields = ('produit', 'Qte', 'rayon') 
+        widgets = {
+            'rayon': forms.HiddenInput(),
+        }
